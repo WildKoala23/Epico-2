@@ -1,8 +1,9 @@
 const Sequelize = require('sequelize')
 const App = require('../models/appModel')
-const Password = require('../models/passwordModel')
 const sequelize = require('../models/db')
-const {generateToken} = require('../middleware/authMiddleware')
+const { generateToken } = require('../middleware/authMiddleware')
+const User = require('../models/userModel')
+const Password = require('../models/passwordModel')
 
 const controllers = {}
 
@@ -10,10 +11,15 @@ const controllers = {}
 controllers.generate = async (req, res) => {
 
     user = await User.findByPk(1);
+    app = await App.findByPk(1);
+
+    console.log(app)
 
     try {
-        const token = generateToken(user)
-        res.json({ success: true, token });
+        const token = await generateToken(user)
+        console.log("User token:")
+        console.log(token)
+        res.json({ success: true, message: token });
     } catch (err) {
         console.error("Token generation failed:", err);
         res.status(500).json({ success: false, error: "Failed to generate token" });

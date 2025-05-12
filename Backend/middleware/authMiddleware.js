@@ -1,14 +1,13 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
+const Relation = require('../models/relationshipModel')
+const { where } = require('sequelize')
 const VALID_TOKEN = 'sleep_token'
 
 
 async function generateToken(user) {
 
     const token = jwt.sign({ id: user.id, name: user.name, roleId: user.roleId }, VALID_TOKEN, { expiresIn: '1h' })
-    
-    console.log("User token:")
-    console.log(token)
 
     return token
 }
@@ -31,7 +30,7 @@ function authenticateJWT(req, res, next) {
     try {
         const decoded = jwt.verify(token, VALID_TOKEN);
         req.user = decoded; // attach decoded user info to request
-        console.log(decoded)
+        console.log(req.user)
         next(); // proceed to route handler
     } catch (err) {
         return res.status(401).json({ message: 'Invalid or expired token' });
@@ -39,15 +38,42 @@ function authenticateJWT(req, res, next) {
 }
 
 //Check to see if user has permission to access app's password
-async function checkAppPermission(req, res, next, permission) {
-    const { appid } = req.params;
-    const user = req.user
-    console.log(user)
-    try {
-        const role = await Role.findByPk(user.roleId)
-    } catch (error) {
-        return res.status(500).json({error: "Internal server error"})
+// Implementation of ReBac (I think)
+function checkPermissions(permissions) {
+    return async function (req, res, next) {
+        try {
+            console.log(permissions)
+            // Get the user from the jwt
+            const user = req.user
+            console.log(user)
+            //Get the app from the parameters
+            const { appid } = req.params
+            console.log(appid)
+
+            //Get the user permissions to the specific app
+            const relations = await Relation.findAll({
+                where: {
+                    objectId: appid,
+                    subjectId: user.id
+                }
+            })
+
+            const userPermissions = relations.map(p => p.dataValues.relation)
+            console.log(userPermissions)
+
+            // Check if user is allowed to do operation
+            const hasPermission = userPermissions.some(element => permissions.includes(element));
+
+            if (hasPermission) {
+                return next();
+            } else {
+                return res.status(403).json({ error: 'Forbidden: insufficient permissions' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 }
 
-module.exports = {generateToken, authenticateJWT, checkAppPermission };
+
+module.exports = { generateToken, authenticateJWT, checkPermissions };

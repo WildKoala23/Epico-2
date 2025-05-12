@@ -6,11 +6,7 @@ var sequelize = require('./db')
 var Relationship = sequelize.define(
     'relationships',
     {
-        // Password or App
-        objectType: {
-            type: Sequelize.STRING,
-            primaryKey: true
-        },
+        // The ID of the app
         objectId: {
             type: Sequelize.INTEGER,
             primaryKey: true
@@ -22,12 +18,7 @@ var Relationship = sequelize.define(
             primaryKey: true
         },
 
-        // User or App
-        subjectType: {
-            type: Sequelize.STRING,
-            primaryKey: true
-        },
-
+        // The ID of the user
         subjectId: {
             type: Sequelize.INTEGER,
             primaryKey: true
