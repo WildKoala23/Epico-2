@@ -10,6 +10,7 @@ var Application = sequelize.define(
             autoIncrement: true
         },
         name: Sequelize.STRING,
+
     },
     {
         timestamps: false

@@ -6,6 +6,11 @@ var Application = require('./appModel')
 var Password = sequelize.define(
     'passwords',
     {
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
         password: Sequelize.INTEGER,
         appid: {
             type: Sequelize.INTEGER,
