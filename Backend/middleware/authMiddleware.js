@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
-const Role = require('../models/rolesModel')
 const VALID_TOKEN = 'sleep_token'
 
 

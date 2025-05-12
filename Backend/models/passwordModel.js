@@ -11,7 +11,7 @@ var Password = sequelize.define(
             primaryKey: true,
             autoIncrement: true
         },
-        password: Sequelize.INTEGER,
+        password: Sequelize.STRING,
         appid: {
             type: Sequelize.INTEGER,
             references: {
@@ -24,14 +24,6 @@ var Password = sequelize.define(
         timestamps: false
     }
 )
-
-sequelize.sync()
-    .then(() => {
-        console.log('Password table created successfully!');
-    })
-    .catch((err) => {
-        console.error('Error creating table:', err);
-    });
 
 Password.belongsTo(Application)
 

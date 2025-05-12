@@ -16,12 +16,5 @@ var User = sequelize.define(
     }
 )
 
-sequelize.sync()
-    .then(() => {
-        console.log('User table created successfully!');
-    })
-    .catch((err) => {
-        console.error('Error creating table:', err);
-    });
 
 module.exports = User

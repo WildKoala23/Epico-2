@@ -18,12 +18,5 @@ var Application = sequelize.define(
     }
 )
 
-sequelize.sync()
-    .then(() => {
-        console.log('App table created successfully!');
-    })
-    .catch((err) => {
-        console.error('Error creating table:', err);
-    });
 
 module.exports = Application;

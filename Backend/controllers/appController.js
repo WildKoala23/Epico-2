@@ -6,8 +6,6 @@ const {generateToken} = require('../middleware/authMiddleware')
 
 const controllers = {}
 
-sequelize.sync()
-
 // Generate a token for testing purposes
 controllers.generate = async (req, res) => {
 

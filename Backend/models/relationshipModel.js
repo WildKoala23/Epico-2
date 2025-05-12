@@ -1,9 +1,6 @@
 var Sequelize = require('sequelize')
 var sequelize = require('./db')
 
-var User = require('./userModel')
-var App = require('./appModel') 
-
 
 // Implement relationship model for ReBac
 var Relationship = sequelize.define(
@@ -41,15 +38,6 @@ var Relationship = sequelize.define(
         timestamps: false
     }
 )
-
-sequelize.sync()
-    .then(() => {
-        console.log('Relationship table created successfully!');
-    })
-    .catch((err) => {
-        console.error('Error creating table:', err);
-    });
-
 
 
 module.exports = Relationship

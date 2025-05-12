@@ -1,9 +1,16 @@
 var express = require('express')
 var app = express()
 
+const initDB = require('./models/initDB');
+
+(async () => {
+    await initDB();
+})();
+
 
 const appRoute = require('./routes/appRoute')
 const passRoute = require('./routes/passRoute')
+
 
 app.set('port', process.env.PORT || 8000)
 
