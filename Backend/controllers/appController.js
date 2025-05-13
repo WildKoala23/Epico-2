@@ -50,12 +50,10 @@ controllers.createApp = async (req, res) => {
 
 controllers.createPass = async (req, res) => {
     success = false;
-    const { appid } = req.body;
+    const { appid } = req.params;
     const data = await Password.create({
         password: "qwerty12345",
-        where: {
-            appid: appid
-        }
+        appid: appid
     }).then(function (data) {
         success = true
         return data

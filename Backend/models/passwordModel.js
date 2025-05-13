@@ -25,6 +25,6 @@ var Password = sequelize.define(
     }
 )
 
-Password.belongsTo(Application)
+Password.belongsTo(Application, { foreignKey: 'appid' });
 
 module.exports = Password;
