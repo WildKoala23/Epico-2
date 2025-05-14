@@ -4,7 +4,7 @@ const { authenticateJWT, checkPermissions } = require('../middleware/authMiddlew
 
 const appController = require('../controllers/appController')
 
-router.post('/', authenticateJWT, checkPermissions(["owner"]), appController.createApp)
-router.get('/', authenticateJWT, checkPermissions(["owner", "editor"]), appController.listApps)
+router.post('/', authenticateJWT(), appController.createApp)
+router.get('/', authenticateJWT(), appController.listApps)
 
 module.exports = router

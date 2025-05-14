@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
 const Relation = require('../models/relationshipModel')
-const { where } = require('sequelize')
+const sequelize = require('sequelize')
 const VALID_TOKEN = 'sleep_token'
+const Log = require('../models/logModel')
+const Application = require('../models/appModel')
 
 
 async function generateToken(user) {
@@ -12,28 +14,48 @@ async function generateToken(user) {
     return token
 }
 
+// Middleware to record operation in databse
+// If success = true -> Operation was sucessfull (no middleware detected foreign auth)
+// If sucess = false -> Operation was not sucessfull 
+async function recordLog(message) {
+    try {
+        const data = await Log.create({
+            operation: message
+        });
+        return data;
+    } catch (err) {
+        console.error("Failed to log operation:", err);
+        return null;
+    }
+}
+
 
 // Only authenticated users may access the application
-function authenticateJWT(req, res, next) {
-    
-    const authHeader = req.headers.authorization;
+function authenticateJWT() {
+    return async function (req, res, next) {
+        const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Token missing or malformed' });
-    }
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            await recordLog("User not authenticated tried to do an operation")
+            return res.status(401).json({ message: 'Token missing or malformed' });
+        }
 
-    const token = authHeader.split(' ')[1];
+        const token = authHeader.split(' ')[1];
 
-    console.log("Token:")
-    console.log(token);
+        console.log("Token:")
+        console.log(token);
 
-    try {
-        const decoded = jwt.verify(token, VALID_TOKEN);
-        req.user = decoded; // attach decoded user info to request
-        console.log(req.user)
-        next(); // proceed to route handler
-    } catch (err) {
-        return res.status(401).json({ message: 'Invalid or expired token' });
+        try {
+            const decoded = jwt.verify(token, VALID_TOKEN);
+            req.user = decoded; // attach decoded user info to request
+            //console.log(req.user)
+            await recordLog('User [' + req.user.id + "] logged in")
+            console.log("User autheticated")
+            return next(); // proceed to route handler
+        } catch (err) {
+            await recordLog("User not authenticated tried to do an operation")
+            return res.status(401).json({ message: 'Invalid or expired token' });
+        }
     }
 }
 
@@ -42,13 +64,19 @@ function authenticateJWT(req, res, next) {
 function checkPermissions(permissions) {
     return async function (req, res, next) {
         try {
-            console.log(permissions)
-            // Get the user from the jwt
-            const user = req.user
-            console.log(user)
-            //Get the app from the parameters
             const { appid } = req.params
+
             console.log(appid)
+
+
+            const app = await Application.findByPk(appid)
+            // Check to see if app exists
+            if (!app) {
+                await recordLog("None existing app was tried to access")
+                return res.status(403).json({ error: 'App does not exist' });
+            }
+
+
 
             //Get the user permissions to the specific app
             const relations = await Relation.findAll({
@@ -65,8 +93,10 @@ function checkPermissions(permissions) {
             const hasPermission = userPermissions.some(element => permissions.includes(element));
 
             if (hasPermission) {
+                await recordLog(user.name + " accessed" + app.name + "[" + app.name + "]")
                 return next();
             } else {
+                await recordLog(user.name + " tried to access/alter " + app.name + "without permission", user.id, app.appid)
                 return res.status(403).json({ error: 'Forbidden: insufficient permissions' });
             }
         } catch (error) {
@@ -74,6 +104,7 @@ function checkPermissions(permissions) {
         }
     }
 }
+
 
 
 module.exports = { generateToken, authenticateJWT, checkPermissions };
