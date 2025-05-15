@@ -1,6 +1,7 @@
 var express = require('express')
 var app = express()
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./configs/swagger')
 const initDB = require('./models/initDB');
 
 (async () => {
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use('/passwords', passRoute)
 
