@@ -9,7 +9,7 @@ const Application = require('../models/appModel')
 
 async function generateToken(user) {
 
-    const token = jwt.sign({ id: user.id, name: user.name, roleId: user.roleId }, VALID_TOKEN, { expiresIn: '1h' })
+    const token = jwt.sign({ id: user.id, name: user.name, roleId: user.roleId }, VALID_TOKEN, { expiresIn: '5h' })
 
     return token
 }
@@ -73,7 +73,7 @@ function checkPermissions(permissions) {
             // Check to see if app exists
             if (!app) {
                 await recordLog("None existing app was tried to access")
-                return res.status(403).json({ error: 'App does not exist' });
+                return res.status(400).json({ error: 'App does not exist' });
             }
 
 

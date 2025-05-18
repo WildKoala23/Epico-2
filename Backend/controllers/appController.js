@@ -42,6 +42,10 @@ controllers.listApps = async (req, res) => {
 controllers.createApp = async (req, res) => {
     success = false;
     const { name } = req.body;
+    if (!name) {
+        res.status(400).json({ success: success, message: "No app name provided" })
+        return
+    }
     const data = await App.create({
         name: name
     })

@@ -1,5 +1,5 @@
 //*************************************
-// Get all apps Test (GET /app)
+// GET /app
 //*************************************/
 pm.test("Status code is 200", function () {
     pm.response.to.have.status(200);
@@ -12,7 +12,6 @@ pm.test("Content-Type is present", function () {
 pm.test("Content-Type equal to 'application/json'"), function () {
     pm.expect(pm.response.headers.get("Content-type")).to.eql("application/json")
 }
-
 
 const schema = {
     type: "object",
@@ -38,8 +37,12 @@ pm.test("Response schema is valid", function () {
 })
 
 //*************************************
-// Create new app test (POST /app)
+// POST /app
 //*************************************/
+
+/**
+ *  Test normal creation of an app
+ **/
 pm.test("Status code is 200", function () {
     pm.response.to.have.status(200);
 })
@@ -54,3 +57,18 @@ pm.test("Response contains the correct name", function () {
     const json = pm.response.json();
     pm.expect(json.name).to.eql("Avengers Network");
 });
+
+
+
+/**
+ *  Test if no name is provided for the app
+ **/
+pm.test("Status code is 400", function () {
+    pm.response.to.have.status(400);
+})
+
+pm.test("No app name provided", function () {
+    const json = pm.response.json()
+    pm.expect(json).to.have.property("success", false)
+    pm.expect(json.message).to.eql("No app name provided")
+})
