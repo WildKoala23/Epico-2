@@ -27,32 +27,33 @@ controllers.generate = async (req, res) => {
   };
 
 controllers.listApps = async (req, res) => {
-    sucess = false;
+    success = false;
     const data = await App.findAll({
     }).then(function (data) {
-        sucess = true;
+        success = true;
         return data;
     }).catch(err => {
-        sucess = false
+        success = false
         return err
     })
-    res.json({ sucess: sucess, data: data })
+    res.status(200).json({ success: success, data: data })
 }
 
 controllers.createApp = async (req, res) => {
-    sucess = false;
+    success = false;
     const { name } = req.body;
     const data = await App.create({
         name: name
     })
-    res.json({ sucess: sucess, data: data })
+    res.status(200).json({ success: success, data: data })
 }
 
 controllers.createPass = async (req, res) => {
     success = false;
     const { appid } = req.params;
+    const { password } = req.body
     const data = await Password.create({
-        password: "qwerty12345",
+        password: password,
         appid: appid
     }).then(function (data) {
         success = true
@@ -84,9 +85,10 @@ controllers.getPass = async (req, res) => {
 
 controllers.updatePass = async (req, res) => {
     const { appid } = req.params;
+    const {password} = req.body
 
     const data = await Password.update({
-        password: "Qwerty1234"
+        password: password
     },
     {
         where: { appid: appid }

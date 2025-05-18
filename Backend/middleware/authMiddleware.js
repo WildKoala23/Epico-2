@@ -82,7 +82,7 @@ function checkPermissions(permissions) {
             const relations = await Relation.findAll({
                 where: {
                     objectId: appid,
-                    subjectId: user.id
+                    subjectId: req.user.id
                 }
             })
 
