@@ -56,6 +56,12 @@ controllers.createPass = async (req, res) => {
     success = false;
     const { appid } = req.params;
     const { password } = req.body
+
+    if (password == "") {
+        return res.status(400).json({ success: false, message: "No password inserted" });
+    }
+
+
     const data = await Password.create({
         password: password,
         appid: appid
@@ -89,7 +95,11 @@ controllers.getPass = async (req, res) => {
 
 controllers.updatePass = async (req, res) => {
     const { appid } = req.params;
-    const {password} = req.body
+    const { password } = req.body
+    
+    if (password == "") {
+        return res.status(400).json({ success: false, message: "No password inserted" });
+    }
 
     const data = await Password.update({
         password: password

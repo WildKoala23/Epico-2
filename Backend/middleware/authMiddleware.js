@@ -64,7 +64,11 @@ function authenticateJWT() {
 function checkPermissions(permissions) {
     return async function (req, res, next) {
         try {
-            const { appid } = req.params
+            const appid = Number(req.params.appid);
+
+            if (!Number.isInteger(appid)) {
+                return res.status(400).json({ success: false, message: "Invalid appid" });
+            }
 
             console.log(appid)
 
@@ -93,13 +97,14 @@ function checkPermissions(permissions) {
             const hasPermission = userPermissions.some(element => permissions.includes(element));
 
             if (hasPermission) {
-                await recordLog(user.name + " accessed" + app.name + "[" + app.name + "]")
+                await recordLog(req.user.name + " accessed" + app.name + "[" + app.name + "]")
                 return next();
             } else {
-                await recordLog(user.name + " tried to access/alter " + app.name + "without permission", user.id, app.appid)
+                await recordLog(req.user.name + " tried to access/alter " + app.name + "without permission", req.user.id, app.appid)
                 return res.status(403).json({ error: 'Forbidden: insufficient permissions' });
             }
         } catch (error) {
+            console.log(error)
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
