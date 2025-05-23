@@ -46,8 +46,8 @@ pm.test("Response to schema is valid", function () {
 /**
  * Test for non existing app
  */
-pm.test("Status code is 400", function () {
-    pm.response.to.have.status(400);
+pm.test("Status code is 404", function () {
+    pm.response.to.have.status(404);
 });
 
 pm.test("Content-Type is present", function () {
@@ -92,8 +92,8 @@ pm.test("Application none existent", function () {
 //*************************************/
 
 //Test correct usage
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
+pm.test("Status code is 201", function () {
+    pm.response.to.have.status(201);
 });
 
 pm.test("Content-Type is present", function () {
@@ -139,8 +139,8 @@ pm.test("Should return 400 when password is missing", function () {
 
 
 // App does not exist
-pm.test("Should return 404 or 400 for non-existent appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 404]);
+pm.test("Should return 404 for non-existent appid", function () {
+    pm.expect(pm.response.code).to.be.oneOf(404);
 
     const res = pm.response.json();
 
@@ -149,8 +149,8 @@ pm.test("Should return 404 or 400 for non-existent appid", function () {
 });
 
 //Appid is NaN
-pm.test("Should return 400 or 422 for non-numeric appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 422, 404]); // 404 if route not matched
+pm.test("Should return 400 for non-numeric appid", function () {
+    pm.expect(pm.response.code).to.be.oneOf(400); // 404 if route not matched
 
     const res = pm.response.json();
 
@@ -161,7 +161,7 @@ pm.test("Should return 400 or 422 for non-numeric appid", function () {
 
 // Password is empty string
 pm.test("Should return 400 when password is empty", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 422]);
+    pm.expect(pm.response.code).to.be.oneOf(400);
 
     const res = pm.response.json();
 
@@ -202,8 +202,8 @@ pm.test("Should return 400 when password is missing", function () {
 
 
 // App does not exist
-pm.test("Should return 404 or 400 for non-existent appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 404]);
+pm.test("Should return 404 for non-existent appid", function () {
+    pm.expect(pm.response.code).to.be.oneOf(404);
 
     const res = pm.response.json();
 
@@ -212,8 +212,8 @@ pm.test("Should return 404 or 400 for non-existent appid", function () {
 });
 
 //Appid is NaN
-pm.test("Should return 400 or 422 for non-numeric appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 422, 404]); // 404 if route not matched
+pm.test("Should return 400 for non-numeric appid", function () {
+    pm.expect(pm.response.code).to.be.oneOf(400); // 404 if route not matched
 
     const res = pm.response.json();
 
@@ -224,7 +224,7 @@ pm.test("Should return 400 or 422 for non-numeric appid", function () {
 
 // Password is empty string
 pm.test("Should return 400 when password is empty", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 422]);
+    pm.expect(pm.response.code).to.be.oneOf(400);
 
     const res = pm.response.json();
 
