@@ -49,13 +49,13 @@ pm.test("Status code is 200", function () {
 
 pm.test("Response contains new appid", function () {
     const json = pm.response.json();
-    pm.expect(json).to.have.property("appid");
-    pm.expect(json.appid).to.be.a("number");
+    pm.expect(json.data).to.have.property("appid");
+    pm.expect(json.data.appid).to.be.a("number");
 });
 
 pm.test("Response contains the correct name", function () {
     const json = pm.response.json();
-    pm.expect(json.name).to.eql("Avengers Network");
+    pm.expect(json.data.name).to.eql("WebSwinger");
 });
 
 

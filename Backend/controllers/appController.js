@@ -42,7 +42,7 @@ controllers.listApps = async (req, res) => {
 controllers.createApp = async (req, res) => {
     success = false;
     const { name } = req.body;
-    if (!name) {
+    if (name == "") {
         res.status(400).json({ success: success, message: "No app name provided" })
         return
     }
@@ -71,7 +71,7 @@ controllers.createPass = async (req, res) => {
     }).catch(err => {
         return err
     })
-    res.status(200).json({
+    res.status(201).json({
         success: success,
         message: "Password created",
         data: data

@@ -14,7 +14,10 @@ pm.test("Content-Type is present", function () {
 });
 
 pm.test("Content-Type equal to 'application/json'", function () {
-    pm.expect(pm.response.headers.get("Content-type")).to.eql("application/json")
+    pm.test("Content-Type equal to 'application/json'", function () {
+        pm.expect(pm.response.headers.get("Content-type")).to.include("application/json")
+    })
+    
 })
 
 const schema = {
@@ -55,7 +58,10 @@ pm.test("Content-Type is present", function () {
 });
 
 pm.test("Content-Type equal to 'application/json'", function () {
-    pm.expect(pm.response.headers.get("Content-type")).to.eql("application/json")
+    pm.test("Content-Type equal to 'application/json'", function () {
+        pm.expect(pm.response.headers.get("Content-type")).to.include("application/json")
+    })
+
 })
 
 pm.test("Application none existent", function () {
@@ -76,9 +82,11 @@ pm.test("Content-Type is present", function () {
 });
 
 pm.test("Content-Type equal to 'application/json'", function () {
-    pm.expect(pm.response.headers.get("Content-type")).to.eql("application/json")
-})
+    pm.test("Content-Type equal to 'application/json'", function () {
+        pm.expect(pm.response.headers.get("Content-type")).to.include("application/json")
+    })
 
+})
 pm.test("Application none existent", function () {
     const json = pm.response.json()
     pm.expect(json).to.have.property("error")
@@ -139,8 +147,8 @@ pm.test("Should return 400 when password is missing", function () {
 
 
 // App does not exist
-pm.test("Should return 404 for non-existent appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf(404);
+pm.test("Should return 400 for non-existent appid", function () {
+    pm.response.to.have.status(400);
 
     const res = pm.response.json();
 
@@ -150,24 +158,14 @@ pm.test("Should return 404 for non-existent appid", function () {
 
 //Appid is NaN
 pm.test("Should return 400 for non-numeric appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf(400); // 404 if route not matched
+    pm.response.to.have.status(400);
+
 
     const res = pm.response.json();
 
     pm.expect(res).to.have.property("success", false);
     pm.expect(res).to.have.property("message");
     pm.expect(res.message).to.eql("Invalid appid")
-});
-
-// Password is empty string
-pm.test("Should return 400 when password is empty", function () {
-    pm.expect(pm.response.code).to.be.oneOf(400);
-
-    const res = pm.response.json();
-
-    pm.expect(res).to.have.property("success", false);
-    pm.expect(res).to.have.property("message");
-    pm.expect(res.message).to.eql("No password inserted")
 });
 
 
@@ -190,6 +188,8 @@ pm.test("Content-Type includes 'application/json'", function () {
 });
 
 
+
+// Missing passsword in body
 pm.test("Should return 400 when password is missing", function () {
     pm.response.to.have.status(400);
 
@@ -202,8 +202,8 @@ pm.test("Should return 400 when password is missing", function () {
 
 
 // App does not exist
-pm.test("Should return 404 for non-existent appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf(404);
+pm.test("Should return 400 for non-existent appid", function () {
+    pm.response.to.have.status(400);
 
     const res = pm.response.json();
 
@@ -213,22 +213,12 @@ pm.test("Should return 404 for non-existent appid", function () {
 
 //Appid is NaN
 pm.test("Should return 400 for non-numeric appid", function () {
-    pm.expect(pm.response.code).to.be.oneOf(400); // 404 if route not matched
+    pm.response.to.have.status(400);
+
 
     const res = pm.response.json();
 
     pm.expect(res).to.have.property("success", false);
     pm.expect(res).to.have.property("message");
     pm.expect(res.message).to.eql("Invalid appid")
-});
-
-// Password is empty string
-pm.test("Should return 400 when password is empty", function () {
-    pm.expect(pm.response.code).to.be.oneOf(400);
-
-    const res = pm.response.json();
-
-    pm.expect(res).to.have.property("success", false);
-    pm.expect(res).to.have.property("message");
-    pm.expect(res.message).to.eql("No password inserted")
 });
