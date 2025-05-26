@@ -27,31 +27,32 @@ controllers.generate = async (req, res) => {
   };
 
 controllers.listApps = async (req, res) => {
-    success = false;
-    const data = await App.findAll({
-    }).then(function (data) {
+    let success = false;
+    try {
+        const data = await App.findAll();
         success = true;
-        return data;
-    }).catch(err => {
-        success = false
-        return err
-    })
-    res.status(200).json({ success: success, data: data })
+        res.status(200).json({ success, data });
+    } catch (err) {
+        res.status(500).json({ success, message: 'DB error', error: err.message });
+    }
 }
 
 controllers.createApp = async (req, res) => {
-    success = false;
+    let success = false;
     const { name } = req.body;
-    if (name == "") {
-        res.status(400).json({ success: success, message: "No app name provided" })
-        return
-    }
-    const data = await App.create({
-        name: name
-    })
-    res.status(200).json({ success: success, data: data })
-}
 
+    if (!name || name.trim() === "") {
+        return res.status(400).json({ success, message: "No app name provided" });
+    }
+
+    try {
+        const data = await App.create({ name: name.trim() });
+        success = true;
+        res.status(201).json({ success, data });
+    } catch (err) {
+        res.status(500).json({ success, message: 'DB error', error: err.message });
+    }
+}
 controllers.createPass = async (req, res) => {
     success = false;
     const { appid } = req.params;

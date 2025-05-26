@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "mocha whitebox_tests/**/*.js --timeout 10000"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +13,13 @@
   "dependencies": {
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mocha": "^11.5.0",
     "nodemon": "^3.1.10",
     "pg": "^8.15.6",
     "postgres": "^3.4.5",
     "sequelize": "^6.37.7",
+    "sinon": "^20.0.0",
+    "supertest": "^7.1.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   }

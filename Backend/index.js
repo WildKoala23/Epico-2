@@ -40,3 +40,5 @@ app.use('/app', appRoute)
 app.listen(app.get('port'), () => {
     console.log('Listening on port 8000')
 })
+
+module.exports = app;
