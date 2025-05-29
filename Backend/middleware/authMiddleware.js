@@ -110,6 +110,12 @@ function checkPermissions(permissions) {
     }
 }
 
+// Function to simulate loggind for creation of mocks
+function validateCredentials() {
+    return function (req, res, next) {
+        console.log('Validating credentials');
+        return next();
+    }
+}
 
-
-module.exports = { generateToken, authenticateJWT, checkPermissions };
+module.exports = { generateToken, authenticateJWT, checkPermissions, validateCredentials };

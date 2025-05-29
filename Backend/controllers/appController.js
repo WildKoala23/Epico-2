@@ -53,68 +53,87 @@ controllers.createApp = async (req, res) => {
         res.status(500).json({ success, message: 'DB error', error: err.message });
     }
 }
-controllers.createPass = async (req, res) => {
-    success = false;
-    const { appid } = req.params;
-    const { password } = req.body
 
-    if (password == "") {
+controllers.createPass = async (req, res) => {
+    const { appid } = req.params;
+    const { password } = req.body;
+
+    if (password === "") {
         return res.status(400).json({ success: false, message: "No password inserted" });
     }
 
+    try {
+        const data = await Password.create({
+            password: password,
+            appid: appid
+        });
 
-    const data = await Password.create({
-        password: password,
-        appid: appid
-    }).then(function (data) {
-        success = true
-        return data
-    }).catch(err => {
-        return err
-    })
-    res.status(201).json({
-        success: success,
-        message: "Password created",
-        data: data
-    })
-}
+        return res.status(201).json({
+            success: true,
+            message: "Password created",
+            data: data
+        });
+    } catch (err) {
+        console.error('Error creating password:', err);
+        return res.status(500).json({
+            success: false,
+            message: "Error creating password",
+            error: err.message
+        });
+    }
+};
+
 
 controllers.getPass = async (req, res) => {
     const { appid } = req.params;
 
-    const data = await Password.findAll({
-        where: { appid: appid }
-    }).then(function (data) {
-        return data
-    }).catch(err => {
-        console.log('Error: ' + err)
-        return err
-    })
+    try {
+        const data = await Password.findAll({ where: { appid } });
+        return res.status(200).json({
+            success: true,
+            data: data
+        });
+    } catch (err) {
+        console.error('Error: ' + err);
+        return res.status(500).json({
+            success: false,
+            message: 'Database error',
+            error: err.message
+        });
+    }
+};
 
-    res.json({ success: true, data: data })
-}
 
 controllers.updatePass = async (req, res) => {
     const { appid } = req.params;
-    const { password } = req.body
-    
-    if (password == "") {
+    const { password } = req.body;
+
+    if (password === "") {
         return res.status(400).json({ success: false, message: "No password inserted" });
     }
 
-    const data = await Password.update({
-        password: password
-    },
-    {
-        where: { appid: appid }
-    }).then(function (data) {
-        return data;
-    }).catch(err => {
-        console.log('Error: ' + err);
-        return err;
-    })
-    res.send({ success: true, data: data, message: "Updated successfully" })
-}
+    try {
+        const data = await Password.update(
+            { password: password },
+            { where: { appid: appid } }
+        );
+
+        return res.status(200).json({
+            success: true,
+            data: data,
+            message: "Updated successfully"
+        });
+    } catch (err) {
+        console.error('Error: ' + err);
+        return res.status(500).json({
+            success: false,
+            message: "Error updating password",
+            error: err.message
+        });
+    }
+};
+
+
 
 
 

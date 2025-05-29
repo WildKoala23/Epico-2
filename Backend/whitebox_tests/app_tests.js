@@ -3,7 +3,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const app = require('../index');
 const User = require('../models/userModel');
-const App = require('../models/appModel');  // Your Sequelize model for apps
+const App = require('../models/appModel'); 
 const { generateToken } = require('../middleware/authMiddleware');
 
 describe('GET /app', () => {
